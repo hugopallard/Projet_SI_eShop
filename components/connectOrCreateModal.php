@@ -27,6 +27,9 @@
                             <label for="birthDate" class="form-label">Birth Date</label>
                             <input type="date" name="birthDate" class="form-control" id="birthDate">
                         </div>
+                        <div class="mb-3">
+                            <input type="hidden" name="currentPage" class="form-control" id="currentPage" value="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
+                        </div>
                     </div>
                     <div class="text-center mb-3">
                         <button type="submit" class="btn btn-primary align-item-end">Submit</button>
@@ -39,3 +42,28 @@
         </div>
     </div>
 </div>
+
+<script>
+    // ---------------
+    const targetDiv = document.getElementById("createAccountData");
+    const btn = document.getElementById("switchForm");
+    btn.onclick = function() {
+        if (targetDiv.style.display !== "none") {
+            targetDiv.style.display = "none";
+            document.getElementById("modalTittle").innerHTML = "Login";
+            document.getElementById("switchForm").innerHTML = "Or create an account";
+            document.getElementById("form").action = "connectAccount.php";
+            document.getElementById("firstName").required = false;
+            document.getElementById("lastName").required = false;
+            document.getElementById("birthDate").required = false;
+        } else {
+            targetDiv.style.display = "block";
+            document.getElementById("modalTittle").innerHTML = "Sign up";
+            document.getElementById("switchForm").innerHTML = "Login instead";
+            document.getElementById("form").action = "createAccount.php";
+            document.getElementById("firstName").required = true;
+            document.getElementById("lastName").required = true;
+            document.getElementById("birthDate").required = true;
+        }
+    }
+</script>

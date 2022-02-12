@@ -1,67 +1,72 @@
 <!doctype html>
 <html lang="en">
 
-<!-- require the head (which require BoostrapJS as well -->
+<!-- require the head -->
 <?php require 'reusableCode/head.html' ?>
 
 <body>
-    <?php
-    $isConnected = false;
-    // The case if the user CONNECT to his account sucessfully, go back to landing.php, print the correct navBar with the correct alert
-    if (isset($connectUsers)) {
-        while ($myUser = $connectUsers->fetch()) {
-            if ($myUser['email'] == $email && $myUser['password'] == $password) {
-                //echo "User exists";
-                $firstName = $myUser['firstName'];
-                $lastName = $myUser['lastName'];
-                $email = $myUser['email'];
-                $password = $myUser['password'];
-                $userFound = true;
-                $isConnected = true;
-                require 'components/navbarConnected.php';
-    ?>
-                <div class="alert alert-success  alert-dismissible fade show text-center" role="alert">
-                    <strong>Happy to see you back</strong> <?php echo ($myUser['firstName'] . ' ' . $myUser['lastName'] . '  !'); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php
+    <!-- Modal of connection / creation of an account -->
+    <?php require 'components/connectOrCreateModal.php';
 
-            }
-        }
-        if ($myUser == false && $isConnected == false) {
-            //echo "User does not exist";
-            require 'components/navbarSignIn.html';
-            $userFound = false;
-            $isConnected = false;
-            ?>
-            <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-                <strong>User does not exist. Try again </strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php
-        }
-    }
-    // The case if the user CREATE an account sucessfully, go back to landing.php, print the correct navBar with the correct alert
-    else if (isset($newUser) || (isset($email) && isset($password))) {
-        require 'components/navbarConnected.php';
-        ?>
-        <div class="alert alert-success  alert-dismissible fade show text-center" role="alert">
-            <strong>Welcome</strong> <?php echo ($firstName . ' ' . $lastName . '  !'); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php
-    }
-    // The case when user go back from profil.php to landing.php
-    else if (isset($_POST['email']) && isset($_POST['password'])) {
-        // We retrieve data from the form in navBarConnected.php now pointing toward landing.php from profil.php
+    if (isset($_POST['userCreated']) && $_POST['userCreated'] == 1) {
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $userCreated = $_POST['userCreated'];
+        $hasBeenShowed = $_POST['hasBeenShowed'];
+        $currentPage = $_POST['currentPage'];
+        // We require the correct navbar
         require 'components/navbarConnected.php';
+        if ($hasBeenShowed == 0) {
+            $hasBeenShowed = 1;
+    ?>
+            <div class="alert alert-success  alert-dismissible fade show text-center" role="alert">
+                <strong>Welcome</strong> <?php echo ($_POST['firstName'] . ' ' . $lastName . '  !'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php
+        }
+        // We require the dataForm which data will change with the new ones above
+        // This form is triggered by the button inside navbarConnected.php
+        // The form is currently pointing toward landing.php, but JS below make it point toward profil.php
+        require 'reusableCode/dataForm.php';
     }
-    // The default case (landingPage)
-    else {
+    // The case if the user CONNECT to his account sucessfully
+    else if (isset($_POST['userFound']) && $_POST['userFound'] == 1) {
+        $firstName = $_POST['firstName'];
+        $lastName = $_POST['lastName'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $userFound = $_POST['userFound'];
+        $hasBeenShowed = $_POST['hasBeenShowed'];
+        $currentPage = $_POST['currentPage'];
+        // We require the correct navbar
+        require 'components/navbarConnected.php';
+        if ($hasBeenShowed == 0) {
+            $hasBeenShowed = 1;
+        ?>
+            <div class="alert alert-success  alert-dismissible fade show text-center" role="alert">
+                <strong>Happy to see you back</strong> <?php echo ($_POST['firstName'] . ' ' . $_POST['lastName'] . '  !'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php
+        }
+        // We require the dataForm which data will change with the new ones above
+        // This form is triggered by the button inside navbarConnected.php
+        // The form is currently pointing toward landing.php, but JS below make it point toward profil.php
+        require 'reusableCode/dataForm.php';
+    }
+    // The case if the user TRIES to connect and FAIL
+    else if (isset($_POST['userFound']) && $_POST['userFound'] == false) {
+        require 'components/navbarSignIn.html';
+        ?>
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <strong>User does not exist. Try again </strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php
+    } else {
         require 'components/navbarSignIn.html';
     }
     ?>
@@ -161,33 +166,9 @@
     <!-- Footer of the page -->
     <?php require 'components/footer.html'; ?>
 
-    <!-- Modal of connection / creation of an account -->
-    <?php require 'components/connectOrCreateModal.html' ?>
-
-
-    <!-- My JS -->
     <script>
-        const targetDiv = document.getElementById("createAccountData");
-        const btn = document.getElementById("switchForm");
-        btn.onclick = function() {
-            if (targetDiv.style.display !== "none") {
-                targetDiv.style.display = "none";
-                document.getElementById("modalTittle").innerHTML = "Login";
-                document.getElementById("switchForm").innerHTML = "Or create an account";
-                document.getElementById("form").action = "connectAccount.php";
-                document.getElementById("firstName").required = false;
-                document.getElementById("lastName").required = false;
-                document.getElementById("birthDate").required = false;
-            } else {
-                targetDiv.style.display = "block";
-                document.getElementById("modalTittle").innerHTML = "Sign up";
-                document.getElementById("switchForm").innerHTML = "Login instead";
-                document.getElementById("form").action = "createAccount.php";
-                document.getElementById("firstName").required = true;
-                document.getElementById("lastName").required = true;
-                document.getElementById("birthDate").required = true;
-            }
-        }
+        // We change the action attribute of the dataForm
+        document.getElementById("dataForm").action = "profil.php";
     </script>
 
 </body>
