@@ -1,13 +1,19 @@
 <?php
 
-require 'reusableCode/createInstancePDO.php';
+try {
+    $db = new PDO('mysql:host=localhost;dbname=myeshopprojetsi;charset=utf8', 'root', 'root');
+} catch (Exception $e) {
+    die('Erreur : ' . $e->getMessage());
+}
 
 $firstName = strip_tags($_POST['profilFirstName']);
 $lastName = strip_tags($_POST['profilLastName']);
 $email = strip_tags($_POST['profilEmail']);
 $password = strip_tags($_POST['profilPassword']);
+$hasBeenShowed = strip_tags($_POST['hasBeenShowed']);
+$userFound = strip_tags($_POST['userFound']);
+$currentPage = strip_tags($_POST['currentPage']);
 $dataModified = strip_tags($_POST['dataModified']);
-
 
 if (
     !isset($_POST['profilEmail']) || !isset($_POST['profilPassword']) || !isset($_POST['profilFirstName']) || !isset($_POST['profilLastName'])

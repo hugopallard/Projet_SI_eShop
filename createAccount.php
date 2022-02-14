@@ -1,5 +1,9 @@
 <?php
-require 'reusableCode/createInstancePDO.php';
+try {
+    $db = new PDO('mysql:host=localhost;dbname=myeshopprojetsi;charset=utf8', 'root', 'root');
+} catch (Exception $e) {
+    die('Erreur : ' . $e->getMessage());
+}
 
 if (!isset($_POST['firstName']) || !isset($_POST['lastName']) || !isset($_POST['birthDate']) || !isset($_POST['email']) || !isset($_POST['password'])) {
     //echo('Il faut remplir tous les champs pour soumettre le formulaire');

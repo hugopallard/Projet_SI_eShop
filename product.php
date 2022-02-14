@@ -1,78 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php require 'reusableCode/head.html'; ?>
+<?php require 'reusableCode/head.html';
+
+
+
+if (isset($_POST['subCategoryName'])) {
+    echo $_POST['subCategoryName'];
+    echo "Filtered";
+    foreach ($_POST['retrievedProduct'] as $retrievedProducts) {
+        echo '<tr>';
+        echo '  <td>', $retrievedProducts['Name'], '</td>';
+        echo '  <td>', $retrievedProducts['Description'], '</td>';
+        echo '  <td>', $retrievedProducts['UnitPrice'], '</td>';
+        echo '  <td>', $retrievedProducts['UploadDate'], '</td>';
+        echo '</tr>';
+    }
+    echo " TAILLE: " . sizeof($_POST['retrievedProduct']);
+} else {
+    require 'retrieveProduct.php';
+    echo "All products retrieved";
+}
+
+if (isset($_POST['userFound']) && $_POST['userFound'] == 1) {
+    echo "user connected";
+    require 'components/navbarConnected.php';
+} else if (isset($_POST['userCreated']) && $_POST['userCreated'] == 1) {
+    echo "user created, access to profil granted";
+    require 'components/navbarConnected.php';
+} else {
+    echo "user not connected";
+    require 'components/navbarSignIn.html';
+}
+
+if (isset($_POST['lastName'])) {
+    $lastName = $_POST['lastName'];
+    echo $lastName;
+}
+if (isset($_POST['firstName'])) {
+    $firstName = $_POST['firstName'];
+    echo $firstName;
+}
+if (isset($_POST['password'])) {
+    $password = $_POST['password'];
+    echo $password;
+}
+if (isset($_POST['email'])) {
+    $email = $_POST['email'];
+    echo $email;
+}
+if (isset($_POST['userFound'])) {
+    $userFound = $_POST['userFound'];
+    echo $userFound;
+}
+if (isset($_POST['userCreated'])) {
+    $userCreated = $_POST['userCreated'];
+    echo $userCreated;
+}
+
+require 'reusableCode/dataForm.php';
+
+?>
 
 <body>
-    <!-- Modal of connection / creation of an account -->
-    <?php require 'components/connectOrCreateModal.php';
-    if (isset($_POST['userCreated']) && $_POST['userCreated'] == 1) {
-        $firstName = $_POST['firstName'];
-        $lastName = $_POST['lastName'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $userCreated = $_POST['userCreated'];
-        $hasBeenShowed = $_POST['hasBeenShowed'];
-        $currentPage = $_POST['currentPage'];
-        // We require the correct navbar
-        require 'components/navbarConnected.php';
-        if ($hasBeenShowed == 0) {
-            $hasBeenShowed = 1;
-    ?>
-            <div class="alert alert-success  alert-dismissible fade show text-center" role="alert">
-                <strong>Welcome</strong> <?php echo ($_POST['firstName'] . ' ' . $lastName . '  !'); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php
-        }
-        // We require the dataForm which data will change with the new ones above
-        // This form is triggered by the button inside navbarConnected.php
-        // The form is currently pointing toward landing.php, but JS below make it point toward profil.php
-        require 'reusableCode/dataForm.php';
-    }
-    // The case if the user CONNECT to his account sucessfully
-    else if (isset($_POST['userFound']) && $_POST['userFound'] == 1) {
-        $firstName = $_POST['firstName'];
-        $lastName = $_POST['lastName'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $userFound = $_POST['userFound'];
-        $hasBeenShowed = $_POST['hasBeenShowed'];
-        $currentPage = $_POST['currentPage'];
-        // We require the correct navbar
-        require 'components/navbarConnected.php';
-        if ($hasBeenShowed == 0) {
-            $hasBeenShowed = 1;
-        ?>
-            <div class="alert alert-success  alert-dismissible fade show text-center" role="alert">
-                <strong>Happy to see you back</strong> <?php echo ($_POST['firstName'] . ' ' . $_POST['lastName'] . '  !'); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php
-        }
-        // We require the dataForm which data will change with the new ones above
-        // This form is triggered by the button inside navbarConnected.php
-        // The form is currently pointing toward landing.php, but JS below make it point toward profil.php
-        require 'reusableCode/dataForm.php';
-    }
-    // The case if the user TRIES to connect and FAIL
-    else if (isset($_POST['userFound']) && $_POST['userFound'] == false) {
-        require 'components/navbarSignIn.html';
-        ?>
-        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-            <strong>User does not exist. Try again </strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+    <div class="text-center pt-3 pb-5">
+        <h2>All of our wines</h2>
+    </div>
+    <div class="offcanvas offcanvas-start text-center" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h3 class="mb-5">Filter our products</h3>
         </div>
-    <?php
-    } else {
-        require 'components/navbarSignIn.html';
-    }
-    ?>
-    <h1>TEST</h1>
+        <div class="offcanvas-body">
+            <form action="filterProduct.php" method="POST" id="filterForm">
+                <div class="mb-3">
+                    <label for="selectCategory" class="form-label">By category</label>
+                    <select name="selectCategory" class="form-select" form="filterForm">
+                        <?php
+                        // On affiche chaque recette une à une
+                        foreach ($retrieveCategories as $category) {
+                        ?>
+                            <option value="<?php echo $category['Name']; ?>"><?php echo $category['Name']; ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+    </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="row justify-content-center">
+                    <?php
+                    $numberOfProducts = 0;
+                    foreach ($_POST['retrievedProduct'] as $retrievedProduct) {
+                    ?>
+                        <div class="card me-4 mb-4" style="width: 18rem;">
+                            <img src="images/myWineIcon.png" class="card-img-top" alt="...">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><?php echo $retrievedProduct['Name']; ?></h5>
+                                <p class="card-text"><?php echo $retrievedProduct['Description']; ?></p>
+                                <button type="button" class="btn btn-primary mt-auto" data-bs-toggle="modal" data-bs-target="<?php echo ("#exampleModal" . $numberOfProducts) ?>">
+                                    Know more
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="<?php echo ("exampleModal" . $numberOfProducts) ?>" tabindex=" -1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"><?php echo $retrievedProduct['Name']; ?></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <img src="images/myWineIcon.png" class="card-img-top" alt="...">
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <strong>Description: </strong><?php echo $retrievedProduct['Description']; ?>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <strong>Prix: </strong> <?php echo ($retrievedProduct['UnitPrice'] . " € l'unité"); ?>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <strong>En stock depuis: </strong><?php echo $retrievedProduct['UploadDate']; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary btn-block" data-bs-dismiss="modal">Buy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                        $numberOfProducts++;
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <script>
-    document.getElementById("dataForm").action = "profil.php";
+    document.getElementById("filterProduct").style.display = "block";
 </script>
 
 </html>

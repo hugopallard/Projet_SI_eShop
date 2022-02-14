@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse justify-content-center" id="myWineNavBar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" onclick="goOrLeaveProduct()" aria-current="page">Our wines</a>
+                    <a class="nav-link" onclick="goToProduct()" aria-current="page">Our wines</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#productBody">Discover</a>
@@ -19,16 +19,22 @@
                 </li>
             </ul>
         </div>
-        <a class="btn btn-primary" onclick="goOrLeaveProfil()" role="button" id="myProfilButton">My profil</a>
+        <div class="me-2">
+            <a class="btn btn-primary" role="button" id="filterProduct" data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample" style="display: none;">Filter</a>
+        </div>
+        <div>
+            <a class="btn btn-primary" onclick="goToProfil()" role="button" id="myProfilButton">My profil</a>
+        </div>
     </div>
 </nav>
 
 <script>
-    function goOrLeaveProfil() {
+    function goToProfil() {
+        document.getElementById("dataForm").action = "profil.php";
         document.getElementById("dataForm").submit();
     }
 
-    function goOrLeaveProduct() {
+    function goToProduct() {
         document.getElementById("dataForm").action = "product.php";
         document.getElementById("dataForm").submit();
     }

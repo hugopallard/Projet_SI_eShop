@@ -1,21 +1,12 @@
-#landingBody {
-    height: 100vh;
-    background-color: white;
-}
-
-#productBody {
-    background-color: rgb(194, 161, 118);
-}
-
-#productBodyTittle {
-    color: white;
-}
-
-#footer {
-    height: 50vh;
-    color: white;
-}
-
-#height100vh {
-    height: 100vh;
-}
+    #productBody {
+        background-color: rgb(194, 161, 118);
+    }
+    
+    #productBodyTittle {
+        color: white;
+    }
+    
+    #footer {
+        height: 50vh;
+        color: white;
+    }

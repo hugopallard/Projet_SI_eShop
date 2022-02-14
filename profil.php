@@ -13,6 +13,7 @@
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
   </symbol>
 </svg>
+
 <!-- require the head -->
 <?php require 'reusableCode/head.html' ?>
 
@@ -20,11 +21,14 @@
   <?php
   // If users's data were modified
   if (isset($_POST['dataModified'])) {
-    $dataModified = $_POST['dataModified'];
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $hasBeenShowed = $_POST['hasBeenShowed'];
+    $userFound = $_POST['userFound'];
+    $currentPage = $_POST['currentPage'];
+    $dataModified = $_POST['dataModified'];
     // We require the dataForm which data will change with the new ones above
     // This form is triggered by the button inside navbarConnected.php
     // The form is currently pointing toward profil.php, but JS below make it point toward landing.php
@@ -32,7 +36,7 @@
     // We require the correct navbar
     require 'components/navbarConnected.php';
 
-    // If they were successfully modified
+    // If there has been an error (null field)
     if ($_POST['dataModified'] == 0) { ?>
       <!-- An danger alert shown if there was ISSUES modifying the data of the user -->
       <div class="alert alert-danger alert-dismissible fade show text-center m-0" role="alert" id="issue">
@@ -43,7 +47,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <?php
-      // If there has been an error (null field)
+      // If they were successfully modified  
     } else {
     ?>
       <!-- An sucess alert shown if there was NO ISSUES modifying the data of the user -->
@@ -57,8 +61,8 @@
   <?php
     }
   }
-  // The if allowing us to go back to landing.php
-  if (!isset($_POST['dataModified']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['firstName']) && isset($_POST['lastName'])) {
+  // Else data arent modified
+  else {
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $email = $_POST['email'];
@@ -78,7 +82,6 @@
     // We require the correct navbar
     require 'components/navbarConnected.php';
   }
-
   ?>
 
   <!-- the content of the profil page -->
@@ -108,6 +111,15 @@
               <input type="text" name="profilLastName" class="form-control" id="profilLastName" value="<?php echo $lastName; ?>" disabled>
             </div>
             <div>
+              <input type="hidden" name="hasBeenShowed" class="form-control" id="hasBeenShowed" value="<?php echo $hasBeenShowed; ?>">
+            </div>
+            <div>
+              <input type="hidden" name="userFound" class="form-control" id="userFound" value="<?php echo $userFound; ?>">
+            </div>
+            <div>
+              <input type="hidden" name="currentPage" class="form-control" id="currentPage" value="<?php echo $currentPage; ?>">
+            </div>
+            <div>
               <input type="hidden" name="dataModified" class="form-control" id="dataModified" value="<?php echo $dataModified; ?>">
             </div>
             <div class="text-center">
@@ -130,8 +142,8 @@
 </html>
 
 <script>
-  // We change the inner HTML of the navbarConnected
-  document.getElementById("myProfilButton").innerHTML = "Home";
+  // We change the style.display of the profil button to NONE, no need to display it on profil.php
+  document.getElementById("myProfilButton").style.display = "none";
   // We change the action attribute of the dataForm
   document.getElementById("dataForm").action = "<?php echo $currentPage; ?>";
 
