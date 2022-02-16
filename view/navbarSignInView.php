@@ -5,19 +5,16 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myWineNavBar" aria-controls="myWineNavBar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="landing.php">
+        <a class="navbar-brand" onclick="goLandingPage()">
             <img src="public/images/myWineIcon.png" alt="" width="30" height="24" class="d-inline-block align-text-top"> MyWine
         </a>
         <div class="collapse navbar-collapse justify-content-center" id="myWineNavBar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="product.php">Our wines</a>
+                    <a class="nav-link" onclick="goToProductPage()">Our wines</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#productBody">Discover</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#footer">Contact us</a>
+                    <a class="nav-link" aria-current="page" href="#footer">Contact Us</a>
                 </li>
             </ul>
         </div>
@@ -88,6 +85,16 @@
 </div>
 
 <script>
+    function goToProductPage() {
+        document.getElementById('formConnect').action = "index.php?action=productLoading";
+        document.getElementById('formConnect').submit();
+    }
+
+    function goLandingPage() {
+        document.getElementById('formConnect').action = "index.php?action=signIn";
+        document.getElementById('formConnect').submit();
+    }
+
     function displayConnectForm() {
         document.getElementById("formCreate").style.display = "none";
         document.getElementById("formConnect").style.display = "block";

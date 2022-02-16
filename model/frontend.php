@@ -10,7 +10,7 @@ function getMostRecentProduct()
 function signIn($email, $password)
 {
     $bdd = bddConnect();
-    $connectUser = $bdd->prepare("SELECT firstName, lastName, email, password FROM users WHERE email = :email AND password = :password LIMIT 1");
+    $connectUser = $bdd->prepare("SELECT firstName, lastName, email, password, userType FROM users WHERE email = :email AND password = :password LIMIT 1");
 
     $connectUser->execute([
         'email' => $email,
@@ -75,6 +75,13 @@ function subCategoriesLoading()
     $retrieveCategories = $bdd->query("SELECT * FROM subCategories");
 
     return $retrieveCategories;
+}
+function usersLoading()
+{
+    $bdd = bddConnect();
+    $retrieveUsers = $bdd->query("SELECT * FROM users");
+
+    return $retrieveUsers;
 }
 function filterProductLoading($subCategorySelected)
 {
@@ -150,6 +157,36 @@ function confirmOrder($productName, $productDescription, $productUnitPrice, $pro
     ]);
 
     return $orderDetail;
+}
+function addProduct($productName, $productDescription, $productUnitPrice, $productUploadDate, $numberOfItems, $subCategorySelected)
+{
+    $bdd = bddConnect();
+    // echo $productName;
+    // echo $productDescription;
+    // echo $productUnitPrice;
+    // echo $productUploadDate;
+    // echo $numberOfItems;
+    // echo $subCategorySelected;
+
+    // I dont know why it doesnt insert the order general informations inside the "products" table.
+    // Values gathered are corrects, fields names are correct and masks as well.
+    // !!! user echo debug above !!!
+
+    // it is formatted differently than above similar issue, but this is how the request is created when Inserting manually into phpMyAdmin.
+
+    $addProduct = $bdd->prepare("INSERT INTO `products` (`Name`, `SubCategory_ID`, `StockQuantity`, `UnitPrice`, `Description`, `UploadDate`) VALUES (:name, :subCategoryID, :stockQuantity, :unitPrice, :description, :uploadDate)");
+    $addProduct->execute([
+        'name' => $productName,
+        'subCategoryID' => $subCategorySelected,
+        'stockQuantity' => $numberOfItems,
+        'unitPrice' => $productUnitPrice,
+        'description' => $productDescription,
+        'uploadDate' => $productUploadDate,
+    ]);
+
+    $addProduct = $addProduct->fetch();
+
+    return $addProduct;
 }
 
 function bddConnect()

@@ -14,10 +14,7 @@
                     <a class="nav-link" onclick="goProductPage()">Our wines</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#productBody">Discover</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#footer">Contact us</a>
+                    <a class="nav-link" aria-current="page" href="#footer">Contact Us</a>
                 </li>
             </ul>
         </div>

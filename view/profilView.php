@@ -1,3 +1,6 @@
+<?php $tittle = "MyWine"; ?>
+<?php $alert = NULL; ?>
+
 <?php ob_start(); ?>
 <div id="profilContent">
 

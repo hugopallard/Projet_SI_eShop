@@ -27,6 +27,12 @@
                             ?>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <input type="hidden" name="email" class="form-control" id="productName" value="<?= $myProfil['email'] ?>">
+                    </div>
+                    <div class="mb-3">
+                        <input type="hidden" name="password" class="form-control" id="productName" value="<?= $myProfil['password'] ?>">
+                    </div>
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </form>
             </div>
@@ -70,7 +76,7 @@
                                                 <form method="post" action="index.php?action=orderProduct" id="<?= "quantityForm" . $numberOfProducts ?>">
                                                     <div class="mb-3">
                                                         <label for="productName" class="form-label"><strong>Name</strong></label>
-                                                        <input type="text" name="productName" class="form-control" id="productName" aria-describedby="emailHelp" value="<?= $product['Name']; ?>" readonly="readonly">
+                                                        <input type="text" name="productName" class="form-control" id="productName" value="<?= $product['Name']; ?>" readonly="readonly">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="productDescription" class="form-label"><strong>Description</strong></label>
@@ -114,7 +120,20 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="quantityForm(<?= $numberOfProducts ?>)" class="btn btn-primary btn-block" data-bs-dismiss="modal">Buy</button>
+                                    <?php if (!empty($email) && !empty($password)) { ?>
+                                        <div class="col-md-12 text-center">
+                                            <button onclick="quantityForm(<?= $numberOfProducts ?>)" class="btn btn-primary btn-block" data-bs-dismiss="modal">Buy</button>
+                                        </div>
+
+                                    <?php
+                                    } else { ?>
+                                        <div class="col-md-12 text-center">
+                                            <button class="btn btn-primary btn-block">You have to be connected to order this</button>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+
                                 </div>
                             </div>
                         </div>

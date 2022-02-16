@@ -1,0 +1,20 @@
+hugopallard2@yahoo.fr
+
+
+BUGS:
+
+15/02/2022
+
+// You can make an order with 0 numberOfItems
+
+// Les commandes sont écrites comme il faut dans la table orderDetails, mais la table order n'est pas remplie. Problème de requête dans frontend.php ?
+CAS A IMPLEMENTER
+
+// chaque utilisateur à un email unique en base
+
+// dark mode / light mode switch
+
+// Boutton annuler la modification des données
+
+// login or create an account make you go back to your page
+
